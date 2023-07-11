@@ -4,42 +4,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- displays site properly based on user's device -->
-
   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
-  <link rel="stylesheet" href="stylesheet.css">
-  <link rel="stylesheet" href="https://fonts.google.com/specimen/Outfit">
-  <title>Frontend Mentor | QR code component</title>
+    <title>Link Shortener</title>
 
-  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
-  <style>
-    .attribution {
-      font-size: 11px;
-      text-align: center;
-    }
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
 
-    .attribution a {
-      color: hsl(228, 45%, 44%);
-    }
-  </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-  <div class="flex">
-    <div class="box">
-      <div class="qr-box">
-        <img src="./images/image-qr-code.png">
-      </div>
-      <div class="text">
-        <h2>Improve your front-end skills by building projects</h2>
-        <p>Scan the QR code to visit Frontend Mentor and take your coding skills to the next level</p>
-      </div>
+<body class="flex items-center justify-center h-screen bg-gray-200">
+    <div class="flex items-center justify-center">
+        <form id="shortener"
+            class="bg-gray-800 text-center dark:bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-xl"
+            hx-post="https://www.sarbeh.com/api/Post" hx-trigger="submit"
+            hx-headers='{"Content-Type": "application/json"}' hx-indicator="#loading" hx-swap="outerHTML"
+            hx-ext='json-enc'>
+            <div class="flex flex-col items-center justify-center mb-4">
+                <label class="block text-gray-200 dark:text-gray-700 text-sm font-bold mb-2 mr-2" for="uniqcode">
+                    Unique Code
+                </label>
+                <input
+                    class="shadow appearance-none border rounded py-2 px-3 text-gray-200 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
+                    id="uniqcode" type="text" name="uniqcode" pattern="^[A-Za-z0-9]*$"
+                    title="Maaf hanya boleh huruf dan angka" required />
+                <button id="generate"
+                    class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">
+                    Generate
+                </button>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-200 dark:text-gray-700 text-sm font-bold mb-2" for="link">
+                    Link
+                </label>
+                <input
+                    class="shadow appearance-none border rounded py-2 px-3 text-gray-200  dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="link" type="url" name="link" required />
+            </div>
+
+            <div class="flex items-center mx-auto w-fit justify-between">
+                <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit">
+                    Submit
+                </button>
+                <div id="loading" style="display: none;">
+                    <p class="text-blue-500 text-xs italic">Loading...</p>
+                </div>
+            </div>
+        </form>
     </div>
-  </div>
-  <div class="attribution">
-    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
-    Coded by <a href="#">Sarbeh</a>.
-  </div>
+
+    <script>
+        document.querySelector("#generate").addEventListener("click", function (e) {
+            e.preventDefault();
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < 6; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            document.querySelector("#uniqcode").value = result;
+        });
+
+    </script>
+
 </body>
 
 </html>
